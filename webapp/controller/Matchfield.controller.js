@@ -12,13 +12,33 @@ sap.ui.define([
 		 * @memberOf ZTHE.ZTHE_VOLTORB_FLIP.view.matchfield
 		 */
 		onInit: function () {
-			let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow();
-			for (var i = 0; i < 5; i++) {
-				let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell(`y${1}x${i}`);
-				oBlockLayoutCell.setTitle("Cell from Controller");
+			let oLayout = this.getView().byId("BlockLayout");
+			this.populateField(oLayout);
+		},
+
+		populateField: (oLayout) => {
+
+			for (let j = 0; j < 5; j++) {
+				let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow("y" + j);
+				for (let i = 0; i < 5; i++) {
+					let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + j + "x" + i);
+					oBlockLayoutCell.setTitle("Cell from Controller");
+					oBlockLayoutRow.addContent(oBlockLayoutCell);
+				}
+				//add counter card to the end of the row
+				let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + j + "x" + 6);
+				oBlockLayoutCell.setTitle("⭐:5\n💥:1");
+				oBlockLayoutRow.addContent(oBlockLayoutCell);
+				oLayout.addContent(oBlockLayoutRow);
+			}
+			let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow("y" + 6);
+			for (let i = 0; i < 5; i++) {
+				let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + 6 + "x" + i);
+				oBlockLayoutCell.setTitle("⭐:5\n💥:1");
 				oBlockLayoutRow.addContent(oBlockLayoutCell);
 			}
-			let oLayout = this.getView().byId("BlockLayout");
+			let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + 6 + "x" + 6);
+			oBlockLayoutRow.addContent(oBlockLayoutCell);
 			oLayout.addContent(oBlockLayoutRow);
 		},
 
