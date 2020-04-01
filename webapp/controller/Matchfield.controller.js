@@ -1,6 +1,7 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast"
+
 ], function (Controller, MessageToast) {
 	"use strict";
 
@@ -11,26 +12,26 @@ sap.ui.define([
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
 		 * @memberOf ZTHE.ZTHE_VOLTORB_FLIP.view.matchfield
 		 */
+
 		onInit: function () {
 			let oLayout = this.getView().byId("BlockLayout");
 			this._populateField(oLayout);
 		},
 		_populateField: (oLayout) => {
-			let _makePointy = (element) => {
-				//TODO make add inner clickble controll
-				//TODO move to object level
-				element.attachBrowserEvent("click", function (oEvent) {
-					console.log("SEND HELP to card", oEvent.currentTarget.id);
-				});
-				element.addStyleClass("customCard");
-			};
-
 			for (let j = 0; j < 5; j++) {
 				let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow("y" + j);
 				for (let i = 0; i < 5; i++) {
 					let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + j + "x" + i);
-					oBlockLayoutCell.setTitle("Cell from Controller");
-					_makePointy(oBlockLayoutCell);
+					var oImage = new sap.m.Image({
+						src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFcAAABXCAYAAABxyNlsAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAPXSURBVHhe7Z3balNBFIaDFRGsIAjSNk3SnHqwIL6A4J3gK3ihOTbP4JVWq1ZTW7Uea9U3Xa5/x8SUDhqT+feW8l98d8nea76ZWTuwVmbnyrWqnZubEwRypUrZcrmcYDCUe6G8aFdbd8Ws3L9zWu7FzRVbfPRAzMjCw3sZyn38wJa2nSeN9Nhu2KLfE/cOxhSRzORikPmdhhVeNK30smWlfgq8allxt2XLz5qWd9GhuGKSnVwfXCL2ddsq7zpWOeymQvmgY0WXDMGhuGKSnVxftaV+26o+4NWjLVs97vH52rP6p4HgZZ/YBXJqyExufmewaqsfurb2rWcbP/isf3fBX7as/LZjBU8PkhsRySUiuUQkl4jkEpFcIpJLRHKJSC4RySUiuUQkl4jkEpFcIpJLRHKJSC6R/1YuAokFKq+oYZ2Q6wNPg3G5qDyH4puWU87+JhdV2qWnDcu7DNSdYlF82bKVfZf7rmO1j92ktpUGtfddq7xpW7HfDsY1EzuD8v2wbP9nuf6hvIst7DZtZa9t5QMGnQH7KZHcLxTHjPhCKaCq/Lw56I34m9wll1vwD0MsqrT1z1vRqHk6qLzpWMmvjVnHfdhg4KMdc9jxlRyObSp8V5R9PLj+sCfiz3I9J6G3AF/CBfBAiAVyX8VzH4JJUo9PZBog1694rsfkrnuuD8U2DWvHPat6yintuVxPD5PJ9ZSQyHUZoSfwtJyU+/shwGbZf6VAbt3lbkT8lYKJwoRJruRykFwikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RP4vuWMdN+hGXEN3yYygQ+WEXJw9E+iOiY6PBw2FkAsR68fh+KbCr1VBx03f5T6dRK4HlLR69gdHpaAbMRZo/Rn2ihVccPEFH7SN4pyb8e7KaPhkoSEPZ+hM1Cs26nL01QvBCComgw7BTrIzIDoNcK9hV2Iopqnx3YBFgsU4UZdjsnrRJOczgTyCL8YCqwhBJd2GnnJWUwIrbNSfi87HQGzTgHSDhZiI9UU5kdxxFiKR7Ah/sGTdWT6SEIlTvv5Fbkz0nwgikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RCSXiOQSkVwikksE74nAyzBQXseA60e9VEiqtPuD00nOrtwnv6rKODsHFVmXnAouFlVa7JxQXDHJTu7jRlItTc6d2W36gFPCJ3R0ilIgrphkJhdgWw47YVIDqWBIIKaYZCr3rBOUe/7aFbt8+6aYkflbN07LFQTWNq/bpcvzIjrz9hOWLKljK3yJ7QAAAABJRU5ErkJggg==",
+						mode: "Background",
+						height: "87px",
+						width: "87px",
+						press: function () {
+							alert("InkYourCode Blog");
+						}
+					});
+					oBlockLayoutCell.addContent(oImage);
 					oBlockLayoutRow.addContent(oBlockLayoutCell);
 				}
 				//add counter card to the end of the row
@@ -48,6 +49,7 @@ sap.ui.define([
 			let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + 6 + "x" + 6);
 			oBlockLayoutRow.addContent(oBlockLayoutCell);
 			oLayout.addContent(oBlockLayoutRow);
+
 		},
 
 		onShowHello: function () {

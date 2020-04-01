@@ -1,14 +1,1 @@
 /* Enter your custom styles here */
-
-.customCard {
-    cursor: pointer;
-    color: #fff;
-    background-image: url("../resources/bigger_back.png");
-    background-size: 100% auto;
-    background-position: 0 80%;
-}
-
-.customCard .sapUiBlockCellContent,
-.customCard .sapUiBlockCellContent .sapMText {
-    color: #fff;
-}
