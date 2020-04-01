@@ -13,16 +13,24 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			let oLayout = this.getView().byId("BlockLayout");
-			this.populateField(oLayout);
+			this._populateField(oLayout);
 		},
-
-		populateField: (oLayout) => {
+		_populateField: (oLayout) => {
+			let _makePointy = (element) => {
+				//TODO make add inner clickble controll
+				//TODO move to object level
+				element.attachBrowserEvent("click", function (oEvent) {
+					console.log("SEND HELP to card", oEvent.currentTarget.id);
+				});
+				element.addStyleClass("pointer");
+			};
 
 			for (let j = 0; j < 5; j++) {
 				let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow("y" + j);
 				for (let i = 0; i < 5; i++) {
 					let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell("y" + j + "x" + i);
 					oBlockLayoutCell.setTitle("Cell from Controller");
+					_makePointy(oBlockLayoutCell);
 					oBlockLayoutRow.addContent(oBlockLayoutCell);
 				}
 				//add counter card to the end of the row
