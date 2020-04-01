@@ -22,7 +22,7 @@ sap.ui.define([
 				element.attachBrowserEvent("click", function (oEvent) {
 					console.log("SEND HELP to card", oEvent.currentTarget.id);
 				});
-				element.addStyleClass("pointer");
+				element.addStyleClass("customCard");
 			};
 
 			for (let j = 0; j < 5; j++) {
