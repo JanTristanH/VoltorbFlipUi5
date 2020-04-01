@@ -12,7 +12,14 @@ sap.ui.define([
 		 * @memberOf ZTHE.ZTHE_VOLTORB_FLIP.view.matchfield
 		 */
 		onInit: function () {
-
+			let oBlockLayoutRow = new sap.ui.layout.BlockLayoutRow();
+			for (var i = 0; i < 5; i++) {
+				let oBlockLayoutCell = new sap.ui.layout.BlockLayoutCell(`y${1}x${i}`);
+				oBlockLayoutCell.setTitle("Cell from Controller");
+				oBlockLayoutRow.addContent(oBlockLayoutCell);
+			}
+			let oLayout = this.getView().byId("BlockLayout");
+			oLayout.addContent(oBlockLayoutRow);
 		},
 
 		onShowHello: function () {
