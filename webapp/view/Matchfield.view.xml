@@ -4,7 +4,9 @@
 		<content id="content">
 			<Button text="{i18n>showHelloButtonText}" press=".onShowHello" class="myAppDemoWT myCustomButton"/>
 			<Input value="{/recipient/name}" valueLiveUpdate="true" width="60%"/>
-			<VBox id="BlockLayout" width="100%"></VBox>
+			<HBox justifyContent="Center">
+				<VBox id="BlockLayout" width="800px"></VBox>
+			</HBox>
 		</content>
 	</Panel>
 </mvc:View>
