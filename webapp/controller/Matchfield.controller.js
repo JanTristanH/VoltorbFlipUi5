@@ -47,6 +47,7 @@
 							oBlockLayoutRow.addItem(oBlockLayoutCell);
 							oLayout.addItem(oBlockLayoutRow);
 						}
+						//build bottom row and add empty Box for spacing
 						let oBlockLayoutRow = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
 						for (let i = 0; i < 5; i++) {
 							let oBlockLayoutCell = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
