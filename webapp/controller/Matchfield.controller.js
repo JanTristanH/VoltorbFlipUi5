@@ -25,7 +25,16 @@
 					},
 
 					_populateField: (that, oLayout) => {
-
+						let mParameters = {
+							success: (oData, response) => {
+								console.log(oData, response);
+							},
+							error: (oData, response) => {
+								console.log(oData, response);
+							}
+						};
+						console.log(that.getOwnerComponent().getModel("odata").getProperty("Categories(1)"));
+						debugger;
 						//build 5 rows with 5 "Gamecards" and one info Card
 						for (let j = 0; j < 5; j++) {
 							let oBlockLayoutRow = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
