@@ -22,7 +22,7 @@ sap.ui.define([
 			this._populateField(this, oLayout);
 		},
 		_imageHandler: function (oEvent) {
-			//debugger
+			//infoger
 			Log.info("Image (ID) clicked: " + oEvent.getSource().getId());
 		},
 
@@ -35,17 +35,17 @@ sap.ui.define([
 			var sPath;
 			let mParam = {
 				success: function (oData) {
-					Log.debug(JSON.stringify(oData));
+					Log.info(JSON.stringify(oData));
 				},
 				error: function (oData) {
-					Log.debug(JSON.stringify(oData));
+					Log.info(JSON.stringify(oData));
 				}
 
 			};
 			sPath = "/Categories(1)/Picture";
 			oModel.read(sPath, mParam);
 
-			//debugger;
+			//infoger;
 			//build 5 rows with 5 "Gamecards" and one info Card
 			for (let j = 0; j < 5; j++) {
 				let oBlockLayoutRow = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
