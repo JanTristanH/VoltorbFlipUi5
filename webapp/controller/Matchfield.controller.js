@@ -26,35 +26,36 @@ sap.ui.define([
 			Log.info("Image (ID) clicked: " + oEvent.getSource().getId());
 		},
 
+		_loadPicture: (that, id) => {
+			return new Promise((resolve, reject) => {
+				// get model
+				var oModel = that.getOwnerComponent().getModel("odata");
+
+				// set path with primary keys in a String
+				var sPath;
+				let mParam = {
+					success: function (oData) {
+						Log.info(JSON.stringify(oData));
+						//weired Northwind file format! remove later
+						//	oData.Picture = oData.Picture.substr(104);
+						resolve(oData);
+					},
+					error: function (oError) {
+						Log.info(JSON.stringify(oData));
+						reject(oError);
+					}
+
+				};
+
+				sPath = "/Categories(" + id + ")";
+				oModel.read(sPath, mParam);
+
+			});
+		},
+
 		_populateField: (that, oLayout) => {
-			let _loadPicture = () => {
-				return new Promise((resolve, reject) => {
-					// get model
-					var oModel = that.getOwnerComponent().getModel("odata");
 
-					// set path with primary keys in a String
-					var sPath;
-					let mParam = {
-						success: function (oData) {
-							Log.info(JSON.stringify(oData));
-							//weired Northwind file format! remove later
-							//	oData.Picture = oData.Picture.substr(104);
-							resolve(oData);
-						},
-						error: function (oError) {
-							Log.info(JSON.stringify(oData));
-							reject(oError);
-						}
-
-					};
-
-					sPath = "/Categories(1)";
-					oModel.read(sPath, mParam);
-
-				});
-			};
-
-			_loadPicture().then((oData) => {
+			that._loadPicture(that, 1).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
 				for (let j = 0; j < 5; j++) {
 					let oBlockLayoutRow = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
@@ -62,7 +63,6 @@ sap.ui.define([
 						let oBlockLayoutCell = new sap.m.VBox("y" + j + "x" + i).setWidth("100%").setAlignItems("Center");
 						var oImage = new sap.m.Image({
 							id: "imageAt_y" + j + "X" + i,
-							//src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFcAAABXCAYAAABxyNlsAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAPXSURBVHhe7Z3balNBFIaDFRGsIAjSNk3SnHqwIL6A4J3gK3ihOTbP4JVWq1ZTW7Uea9U3Xa5/x8SUDhqT+feW8l98d8nea76ZWTuwVmbnyrWqnZubEwRypUrZcrmcYDCUe6G8aFdbd8Ws3L9zWu7FzRVbfPRAzMjCw3sZyn38wJa2nSeN9Nhu2KLfE/cOxhSRzORikPmdhhVeNK30smWlfgq8allxt2XLz5qWd9GhuGKSnVwfXCL2ddsq7zpWOeymQvmgY0WXDMGhuGKSnVxftaV+26o+4NWjLVs97vH52rP6p4HgZZ/YBXJqyExufmewaqsfurb2rWcbP/isf3fBX7as/LZjBU8PkhsRySUiuUQkl4jkEpFcIpJLRHKJSC4RySUiuUQkl4jkEpFcIpJLRHKJSC6R/1YuAokFKq+oYZ2Q6wNPg3G5qDyH4puWU87+JhdV2qWnDcu7DNSdYlF82bKVfZf7rmO1j92ktpUGtfddq7xpW7HfDsY1EzuD8v2wbP9nuf6hvIst7DZtZa9t5QMGnQH7KZHcLxTHjPhCKaCq/Lw56I34m9wll1vwD0MsqrT1z1vRqHk6qLzpWMmvjVnHfdhg4KMdc9jxlRyObSp8V5R9PLj+sCfiz3I9J6G3AF/CBfBAiAVyX8VzH4JJUo9PZBog1694rsfkrnuuD8U2DWvHPat6yintuVxPD5PJ9ZSQyHUZoSfwtJyU+/shwGbZf6VAbt3lbkT8lYKJwoRJruRykFwikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RP4vuWMdN+hGXEN3yYygQ+WEXJw9E+iOiY6PBw2FkAsR68fh+KbCr1VBx03f5T6dRK4HlLR69gdHpaAbMRZo/Rn2ihVccPEFH7SN4pyb8e7KaPhkoSEPZ+hM1Cs26nL01QvBCComgw7BTrIzIDoNcK9hV2Iopqnx3YBFgsU4UZdjsnrRJOczgTyCL8YCqwhBJd2GnnJWUwIrbNSfi87HQGzTgHSDhZiI9UU5kdxxFiKR7Ah/sGTdWT6SEIlTvv5Fbkz0nwgikktEcolILhHJJSK5RCSXiOQSkVwikktEcolILhHJJSK5RCSXiOQSkVwikksE74nAyzBQXseA60e9VEiqtPuD00nOrtwnv6rKODsHFVmXnAouFlVa7JxQXDHJTu7jRlItTc6d2W36gFPCJ3R0ilIgrphkJhdgWw47YVIDqWBIIKaYZCr3rBOUe/7aFbt8+6aYkflbN07LFQTWNq/bpcvzIjrz9hOWLKljK3yJ7QAAAABJRU5ErkJggg==",
 							src: "data:image/png;base64," + oData.Picture,
 							mode: "Background",
 							height: "87px",
