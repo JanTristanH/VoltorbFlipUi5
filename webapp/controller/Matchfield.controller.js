@@ -38,7 +38,7 @@ sap.ui.define([
 						success: function (oData) {
 							Log.info(JSON.stringify(oData));
 							//weired Northwind file format! remove later
-							oData.Picture = oData.Picture.substr(104);
+							//	oData.Picture = oData.Picture.substr(104);
 							resolve(oData);
 						},
 						error: function (oError) {
@@ -47,7 +47,8 @@ sap.ui.define([
 						}
 
 					};
-					sPath = "/Categories(1)/Picture?$format=json";
+
+					sPath = "/Categories(1)";
 					oModel.read(sPath, mParam);
 
 				});
