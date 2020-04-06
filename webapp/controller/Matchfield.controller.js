@@ -3,9 +3,11 @@ let starEmoji = "⭐";
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
-	"sap/base/Log"
+	"sap/base/Log",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
 
-], function (Controller, MessageToast, Log) {
+], function (Controller, MessageToast, Log, Filter, FilterOperator) {
 	"use strict";
 
 	return Controller.extend("ZTHE.ZTHE_VOLTORB_FLIP.controller.matchfield", {
@@ -24,8 +26,54 @@ sap.ui.define([
 		_imageHandler: function (oEvent) {
 			//infoger
 			Log.info("Image (ID) clicked: " + oEvent.getSource().getId());
-		},
+			let oImage = this;
+			if (!oImage.flipped) {
+				var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
+				let that = oView.getController(); //for private Method
+				oImage.flipped = true; //todo or disable clickf
+				let x = 0 + 1;
+				let y = 0 + 1;
+				//nested Promise bad
+				that._loadValueAtPosition(oView, x, y).then(oData => {
+					//todo add flipping animation
+					that._loadPicture(that, oData.value).then(oData => {
+						oImage.setSrc("data:image/png;base64," + oData.Picture);
 
+					});
+				});
+			}
+		},
+		_loadValueAtPosition: (that, x, y) => {
+			return new Promise((resolve, reject) => {
+				// get model
+				var oModel = that.getModel("odata");
+
+				// set path with primary keys in a String
+				var sPath;
+				let mParam = {
+					success: function (oData) {
+						Log.debug(JSON.stringify(oData));
+						//weired Northwind file format! remove later
+						//	oData.Picture = oData.Picture.substr(104);
+						resolve(oData.results[0]);
+					},
+					error: function (oError) {
+						Log.error(JSON.stringify(oError));
+						reject(oError);
+					},
+					urlParameters: new Map([
+						['x', '1'],
+						['y', '1']
+					])
+
+				};
+
+				sPath = "/Values";
+				oModel.read(sPath, mParam);
+
+			});
+
+		},
 		_loadPicture: (that, id) => {
 			return new Promise((resolve, reject) => {
 				// get model
@@ -38,16 +86,23 @@ sap.ui.define([
 						Log.info(JSON.stringify(oData));
 						//weired Northwind file format! remove later
 						//	oData.Picture = oData.Picture.substr(104);
-						resolve(oData);
+						debugger;
+						resolve(oData.results[0]);
 					},
 					error: function (oError) {
-						Log.info(JSON.stringify(oData));
+						Log.error(JSON.stringify(oError));
 						reject(oError);
-					}
+					},
+					// urlParameters: new Map([
+					// 	['id', id]
+					// ])
+					filters: [new Filter("PictureID", FilterOperator.EQ, id)]
 
 				};
 
-				sPath = "/Categories(" + id + ")";
+				sPath = "/Categories"; //TODO change to pictures
+				sPath = "/Pictures";
+
 				oModel.read(sPath, mParam);
 
 			});
@@ -55,7 +110,7 @@ sap.ui.define([
 
 		_populateField: (that, oLayout) => {
 
-			that._loadPicture(that, 1).then((oData) => {
+			that._loadPicture(that, 99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
 				for (let j = 0; j < 5; j++) {
 					let oBlockLayoutRow = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
@@ -74,7 +129,7 @@ sap.ui.define([
 					}
 					//add counter card to the end of the row
 					let oBlockLayoutCell = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%");
-					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji)).setAlignItems("Start");
+					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji + ":1")).setAlignItems("Start");
 					oBlockLayoutRow.addItem(oBlockLayoutCell);
 					oLayout.addItem(oBlockLayoutRow);
 				}
@@ -82,7 +137,7 @@ sap.ui.define([
 				let oBlockLayoutRow = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
 				for (let i = 0; i < 5; i++) {
 					let oBlockLayoutCell = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
-					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji));
+					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji + ":1"));
 					oBlockLayoutRow.addItem(oBlockLayoutCell);
 				}
 				let oBlockLayoutCell = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
