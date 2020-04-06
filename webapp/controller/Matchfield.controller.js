@@ -33,14 +33,15 @@ sap.ui.define([
 				var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
 				let that = oView.getController(); //for private Method
 				oImage.flipped = true; //todo or disable clickf
-				let x = 0 + 1;
-				let y = 0 + 1;
+				let x = parseInt(this.getId().charAt(11)) + 1;
+				let y = parseInt(this.getId().charAt(9)) + 1;
 				//nested Promise bad
 				that._loadValueAtPosition(oView, x, y).then(oData => {
 					//todo add flipping animation
+					Log.info("value for this card" + oData.value);
 					that._loadPicture(that, oData.value).then(oData => {
-						oImage.setSrc("data:image/png;base64," + oData.Picture);
 
+						oImage.setSrc("data:image/png;base64," + oData.Picture);
 					});
 				});
 			}
@@ -55,20 +56,20 @@ sap.ui.define([
 				let mParam = {
 					success: function (oData) {
 						Log.debug(JSON.stringify(oData));
-						//weired Northwind file format! remove later
-						//	oData.Picture = oData.Picture.substr(104);
 						resolve(oData.results[0]);
 					},
 					error: function (oError) {
 						Log.error(JSON.stringify(oError));
 						reject(oError);
 					},
-					urlParameters: new Map([
-						['x', '1'],
-						['y', '1']
+					/*urlParameters: new Map([
+						['x', x],
+						['y', y]
 					])
-
+*/
+					filters: [new Filter("x", FilterOperator.EQ, x), new Filter("y", FilterOperator.EQ, y)]
 				};
+				debugger
 
 				sPath = "/Values";
 				oModel.read(sPath, mParam);
@@ -78,9 +79,7 @@ sap.ui.define([
 		},
 		_loadPicture: (that, id) => {
 			return new Promise((resolve, reject) => {
-
 				let a = pictureCache.filter(e => e.PictureID === id);
-				debugger;
 				if (a.length > 0) {
 					resolve(a[0]);
 				} else {
