@@ -1,5 +1,6 @@
 let fireEmoji = "💥";
 let starEmoji = "⭐";
+let pictureCache = [];
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
@@ -22,6 +23,7 @@ sap.ui.define([
 			let oLayout = this.getView().byId("BlockLayout");
 
 			this._populateField(this, oLayout);
+			//todo preload missing Images on the way out
 		},
 		_imageHandler: function (oEvent) {
 			//infoger
@@ -76,35 +78,41 @@ sap.ui.define([
 		},
 		_loadPicture: (that, id) => {
 			return new Promise((resolve, reject) => {
-				// get model
-				var oModel = that.getOwnerComponent().getModel("odata");
 
-				// set path with primary keys in a String
-				var sPath;
-				let mParam = {
-					success: function (oData) {
-						Log.info(JSON.stringify(oData));
-						//weired Northwind file format! remove later
-						//	oData.Picture = oData.Picture.substr(104);
-						debugger;
-						resolve(oData.results[0]);
-					},
-					error: function (oError) {
-						Log.error(JSON.stringify(oError));
-						reject(oError);
-					},
-					// urlParameters: new Map([
-					// 	['id', id]
-					// ])
-					filters: [new Filter("PictureID", FilterOperator.EQ, id)]
+				let a = pictureCache.filter(e => e.PictureID === id);
+				debugger;
+				if (a.length > 0) {
+					resolve(a[0]);
+				} else {
 
-				};
+					// get model
+					var oModel = that.getOwnerComponent().getModel("odata");
 
-				sPath = "/Categories"; //TODO change to pictures
-				sPath = "/Pictures";
+					// set path with primary keys in a String
+					var sPath;
+					let mParam = {
+						success: function (oData) {
+							Log.info(JSON.stringify(oData));
+							pictureCache.push(oData.results[0]);
+							resolve(oData.results[0]);
+						},
+						error: function (oError) {
+							Log.error(JSON.stringify(oError));
+							reject(oError);
+						},
+						// urlParameters: new Map([
+						// 	['id', id]
+						// ])
+						filters: [new Filter("PictureID", FilterOperator.EQ, id)]
 
-				oModel.read(sPath, mParam);
+					};
 
+					sPath = "/Categories"; //TODO change to pictures
+					sPath = "/Pictures";
+
+					oModel.read(sPath, mParam);
+
+				}
 			});
 		},
 
