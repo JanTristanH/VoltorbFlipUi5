@@ -128,9 +128,9 @@ sap.ui.define([
 			that._loadPicture(that, 99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
 				for (let j = 0; j < 5; j++) {
-					let oBlockLayoutRow = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
+					let oHBox = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
 					for (let i = 0; i < 5; i++) {
-						let oBlockLayoutCell = new sap.m.VBox("y" + j + "x" + i).setWidth("100%").setAlignItems("Center");
+						let oVBox = new sap.m.VBox("y" + j + "x" + i).setWidth("100%").setAlignItems("Center");
 						var oImage = new sap.m.Image({
 							id: "imageAt_y" + j + "X" + i,
 							src: "data:image/png;base64," + oData.Picture,
@@ -139,25 +139,27 @@ sap.ui.define([
 							width: "87px",
 							press: that._imageHandler
 						});
-						oBlockLayoutCell.addItem(oImage);
-						oBlockLayoutRow.addItem(oBlockLayoutCell);
+						oVBox.addItem(oImage);
+						oHBox.addItem(oVBox);
 					}
 					//add counter card to the end of the row
-					let oBlockLayoutCell = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%");
-					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji + ":1")).setAlignItems("Start");
-					oBlockLayoutRow.addItem(oBlockLayoutCell);
-					oLayout.addItem(oBlockLayoutRow);
+					let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%");
+					//todo these numbers could be bound
+					oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":")).setAlignItems("Start");
+
+					oHBox.addItem(oVBox);
+					oLayout.addItem(oHBox);
 				}
 				//build bottom row and add empty Box for spacing
-				let oBlockLayoutRow = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
+				let oHBox = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
 				for (let i = 0; i < 5; i++) {
-					let oBlockLayoutCell = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
-					oBlockLayoutCell.addItem(new sap.m.Text().setText(starEmoji + ":5" + "\n" + fireEmoji + ":1"));
-					oBlockLayoutRow.addItem(oBlockLayoutCell);
+					let oVBox = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
+					oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
+					oHBox.addItem(oVBox);
 				}
-				let oBlockLayoutCell = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
-				oBlockLayoutRow.addItem(oBlockLayoutCell);
-				oLayout.addItem(oBlockLayoutRow);
+				let oVBox = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
+				oHBox.addItem(oVBox);
+				oLayout.addItem(oHBox);
 			});
 		},
 
