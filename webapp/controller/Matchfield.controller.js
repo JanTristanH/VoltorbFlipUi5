@@ -69,7 +69,6 @@ sap.ui.define([
 */
 					filters: [new Filter("x", FilterOperator.EQ, x), new Filter("y", FilterOperator.EQ, y)]
 				};
-				debugger
 
 				sPath = "/Values";
 				oModel.read(sPath, mParam);
