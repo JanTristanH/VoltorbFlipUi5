@@ -33,6 +33,7 @@ let placeAtRandom = (e) => {
 	//console.log(i < 25 ? `placed ${e} at x${x}y${y}` : "ran out")
 };
 obj.newGame = (level) => {
+	level = level ? level : 1;
 	for (let i = 0; i < 5; i++) {
 		obj._matchField[i] = [1, 1, 1, 1, 1];
 	}
@@ -69,6 +70,7 @@ obj.getColumnTraps = (x) => {
 	x -= 1;
 	return obj._matchField.reduce((acc, e) => acc + (e[x] === 0 ? 1 : 0), 0);
 };
+obj.valueAt = (x, y) => obj._matchField[y - 1][x - 1];
 
 //module.exports = obj;
 sap.ui.define([
