@@ -7,6 +7,8 @@ sap.ui.define([
 
 	return {
 		init: function () {
+
+			Game.newGame(1);
 			// create
 			var oMockServer = new MockServer({
 				// eslint-disable-next-line
@@ -29,33 +31,23 @@ sap.ui.define([
 			// start
 			oMockServer.start();
 		},
-		_loadGame: function (oMockServer) {
+		_loadGame: (oMockServer) => {
+			let spliceXnYOut = (s) => {
+				let params = s.split("filter=")[1].split("%20");
+				let obj = {};
+				obj.x = params[params.indexOf("x") + 2];
+				obj.y = params[params.indexOf("y") + 2];
+				return obj;
+			};
 
-			let aRequests = oMockServer.getRequests();
-			debugger
-			aRequests.push({
-				method: "GET",
-				path: new RegExp("(.*)Order(.*)"),
-				response: function (oXhr, sUrlParams) {
-					debugger;
-					//sUrlParams
-					Game.newGame();
-					var oResponse = {
-						data: {}, //call corresponding game here
-						headers: {
-							"Content-Type": "application/json;charset=utf-8",
-							"DataServiceVersion": "1.0"
-						},
-						status: "204",
-						statusText: "No Content"
-					};
-					oXhr.respond(oResponse.status, oResponse.headers, JSON.stringify({
-						d: oResponse.data
-					}));
-				}
-			});
-
-			oMockServer.setRequests(aRequests);
+			let fnValue = (oEvent) => {
+				var oXhr = oEvent.getParameter("oXhr");
+				let coordinates = spliceXnYOut(oXhr.url);
+				oEvent.getParameter("oFilteredData").results = [{
+					value: Game.valueAt(coordinates.x, coordinates.y)
+				}];
+			};
+			oMockServer.attachAfter("GET", fnValue, "Values");
 
 		}
 
