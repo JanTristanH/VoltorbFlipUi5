@@ -29,22 +29,32 @@ sap.ui.define([
 			//infoger
 			Log.info("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
-			if (!oImage.flipped) {
-				var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
-				let that = oView.getController(); //for private Method
-				oImage.flipped = true; //todo or disable clickf
-				let x = parseInt(this.getId().charAt(11)) + 1;
-				let y = parseInt(this.getId().charAt(9)) + 1;
-				//nested Promise bad
-				that._loadValueAtPosition(oView, x, y).then(oData => {
-					//todo add flipping animation
-					Log.info("value for this card" + oData.value);
-					that._loadPicture(that, oData.value).then(oData => {
-
-						oImage.setSrc("data:image/png;base64," + oData.Picture);
+			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
+			let that = oView.getController(); //for private Method
+			let x = parseInt(this.getId().charAt(11), 10) + 1;
+			let y = parseInt(this.getId().charAt(9), 10) + 1;
+			//nested Promise bad
+			that._loadValueAtPosition(oView, x, y).then(oData => {
+				//Log.info("value for this card" + oData.value);
+				that._loadPicture(that, oData.value).then(oDataP => {
+					var oImageNew = new sap.m.Image({
+						id: "flipped" + oImage.getId(),
+						src: "data:image/png;base64," + oDataP.Picture,
+						mode: "Background",
+						height: "87px",
+						width: "87px"
+							//,press: that._imageHandler
 					});
+					that._flipFromToImage(oImage, oImageNew);
+					//	oImage.setSrc("data:image/png;base64," + oDataP.Picture);
 				});
-			}
+			});
+
+		},
+		_flipFromToImage: (oImageFrom, oImageTo) => {
+			//todo add flipping animation
+			oImageFrom.getParent().addItem(oImageTo);
+			oImageFrom.destroy();
 		},
 		_loadValueAtPosition: (that, x, y) => {
 			return new Promise((resolve, reject) => {
@@ -105,7 +115,6 @@ sap.ui.define([
 
 					};
 
-					sPath = "/Categories"; //TODO change to pictures
 					sPath = "/Pictures";
 
 					oModel.read(sPath, mParam);
