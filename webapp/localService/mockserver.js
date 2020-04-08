@@ -48,6 +48,15 @@ sap.ui.define([
 				}];
 			};
 			oMockServer.attachAfter("GET", fnValue, "Values");
+			let fnRowPoints = (oEvent) => {
+				debugger;
+				var oXhr = oEvent.getParameter("oXhr");
+				let coordinates = spliceXnYOut(oXhr.url);
+				oEvent.getParameter("oFilteredData").results = [{
+					value: Game.getRowPoints(coordinates.y)
+				}];
+			};
+			oMockServer.attachAfter("GET", fnRowPoints, "RowsPoints");
 
 		}
 
