@@ -42,7 +42,7 @@ sap.ui.define([
 		_loadTrapAndPointCount: (that) => {
 			let oModel = that.getOwnerComponent().getModel("odata");
 			let oPointsModel = that.getView().getModel("points");
-			let loadRow = (sPath, emoji, index) => {
+			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
 					success: function (oData) {
 						let obj = {};
@@ -52,17 +52,25 @@ sap.ui.define([
 					error: (oError) => {
 						Log.error(JSON.stringify(oError));
 					},
-					filters: [new Filter("y", FilterOperator.EQ, index + 1)]
+					filters: [new Filter(filterOn, FilterOperator.EQ, index + 1)]
 				};
-
 				oModel.read(sPath, mParam);
-
+			};
+			let loadRow = (sPath, emoji, index) => {
+				_loader(sPath, emoji, index, "y");
+			};
+			let loadColumn = (sPath, emoji, index) => {
+				_loader(sPath, emoji, index, "x");
 			};
 			const sPathRowsPoints = "/RowsPoints";
 			const sPathRowsTraps = "/RowsTraps";
-			for (let y = 0; y < 5; y++) {
-				loadRow(sPathRowsPoints, starEmoji, y);
-				loadRow(sPathRowsTraps, fireEmoji, y);
+			const sPathColumnPoints = "/ColumnsPoints";
+			const sPathColumnTraps = "/ColumnsTraps";
+			for (let i = 0; i < 5; i++) {
+				loadRow(sPathRowsPoints, starEmoji, i);
+				loadRow(sPathRowsTraps, fireEmoji, i);
+				loadColumn(sPathColumnPoints, starEmoji, i);
+				loadColumn(sPathColumnTraps, starEmoji, i);
 			}
 		},
 		_imageHandler: function (oEvent) {

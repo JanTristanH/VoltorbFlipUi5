@@ -60,8 +60,8 @@
 				<EntitySet Name="Values" EntityType="NorthwindModel.Value"/>
 				<EntitySet Name="RowsTraps" EntityType="NorthwindModel.RowTraps"/>
 				<EntitySet Name="RowsPoints" EntityType="NorthwindModel.RowPoints"/>
-				<EntitySet Name="ColumnTraps" EntityType="NorthwindModel.ColumnTrap"/>
-				<EntitySet Name="ColumnPoints" EntityType="NorthwindModel.ColumnPoints"/>
+				<EntitySet Name="ColumnsTraps" EntityType="NorthwindModel.ColumnTrap"/>
+				<EntitySet Name="ColumnsPoints" EntityType="NorthwindModel.ColumnPoints"/>
 			</EntityContainer>
 		</Schema>
 	</edmx:DataServices>
