@@ -39,7 +39,8 @@ sap.ui.define([
 				obj.y = params[params.indexOf("y") + 2];
 				return obj;
 			};
-
+			//todo streamline forwarding function
+			//add value request
 			let fnValue = (oEvent) => {
 				var oXhr = oEvent.getParameter("oXhr");
 				let coordinates = spliceXnYOut(oXhr.url);
@@ -48,8 +49,8 @@ sap.ui.define([
 				}];
 			};
 			oMockServer.attachAfter("GET", fnValue, "Values");
+			//add point request row
 			let fnRowPoints = (oEvent) => {
-				debugger;
 				var oXhr = oEvent.getParameter("oXhr");
 				let coordinates = spliceXnYOut(oXhr.url);
 				oEvent.getParameter("oFilteredData").results = [{
@@ -57,6 +58,34 @@ sap.ui.define([
 				}];
 			};
 			oMockServer.attachAfter("GET", fnRowPoints, "RowsPoints");
+			//add Trap request row
+			let fnRowTraps = (oEvent) => {
+				var oXhr = oEvent.getParameter("oXhr");
+				let coordinates = spliceXnYOut(oXhr.url);
+				oEvent.getParameter("oFilteredData").results = [{
+					value: Game.getRowTraps(coordinates.y)
+				}];
+			};
+			oMockServer.attachAfter("GET", fnRowTraps, "RowsTraps");
+
+			//add point request column
+			let fnColumnPoints = (oEvent) => {
+				var oXhr = oEvent.getParameter("oXhr");
+				let coordinates = spliceXnYOut(oXhr.url);
+				oEvent.getParameter("oFilteredData").results = [{
+					value: Game.getColumnPoints(coordinates.x)
+				}];
+			};
+			oMockServer.attachAfter("GET", fnColumnPoints, "ColumnPoints");
+			//add Trap request Column
+			let fnColumnTraps = (oEvent) => {
+				var oXhr = oEvent.getParameter("oXhr");
+				let coordinates = spliceXnYOut(oXhr.url);
+				oEvent.getParameter("oFilteredData").results = [{
+					value: Game.getColumnTraps(coordinates.x)
+				}];
+			};
+			oMockServer.attachAfter("GET", fnColumnTraps, "ColumnTraps");
 
 		}
 
