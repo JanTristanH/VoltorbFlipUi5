@@ -30,13 +30,15 @@ sap.ui.define([
 			//todo preload missing Images on the way out
 		},
 		_populateTextCard: (x, y, oVBox) => {
+			let infix = x > y ? "Rows" : "Columns";
 			//todo bookmark
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "startext").bindText({
-				path: "points>/RowsPoints" + y
+				//use lower number
+				path: "points>/" + infix + "Points" + (y < x ? y : x)
 			}));
 
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "firetext").bindText({
-				path: "points>/RowsTraps" + y
+				path: "points>/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
 		_loadTrapAndPointCount: (that) => {
@@ -203,7 +205,8 @@ sap.ui.define([
 				let oHBox = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
 				for (let i = 0; i < 5; i++) {
 					let oVBox = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
-					oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
+					//oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
+					that._populateTextCard(i, 6, oVBox);
 					oHBox.addItem(oVBox);
 				}
 				let oVBox = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
