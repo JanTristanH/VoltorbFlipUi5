@@ -66,13 +66,13 @@ sap.ui.define([
 			};
 			const sPathRowsPoints = "/RowsPoints";
 			const sPathRowsTraps = "/RowsTraps";
-			const sPathColumnPoints = "/ColumnsPoints";
-			const sPathColumnTraps = "/ColumnsTraps";
+			const sPathColumnsPoints = "/ColumnsPoints";
+			const sPathColumnsTraps = "/ColumnsTraps";
 			for (let i = 0; i < 5; i++) {
 				loadRow(sPathRowsPoints, starEmoji, i);
 				loadRow(sPathRowsTraps, fireEmoji, i);
-				loadColumn(sPathColumnPoints, starEmoji, i);
-				loadColumn(sPathColumnTraps, fireEmoji, i);
+				loadColumn(sPathColumnsPoints, starEmoji, i);
+				loadColumn(sPathColumnsTraps, fireEmoji, i);
 			}
 		},
 		_imageHandler: function (oEvent) {
