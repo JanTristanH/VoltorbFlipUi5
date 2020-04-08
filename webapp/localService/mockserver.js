@@ -75,7 +75,7 @@ sap.ui.define([
 				var oXhr = oEvent.getParameter("oXhr");
 				let coordinates = spliceXnYOut(oXhr.url);
 				oEvent.getParameter("oFilteredData").results = [{
-					value: Game.getColumnPoints(coordinates.y)
+					value: Game.getColumnPoints(coordinates.x)
 				}];
 			};
 			oMockServer.attachAfter("GET", fnColumnPoints, "ColumnsPoints");
@@ -84,7 +84,7 @@ sap.ui.define([
 				var oXhr = oEvent.getParameter("oXhr");
 				let coordinates = spliceXnYOut(oXhr.url);
 				oEvent.getParameter("oFilteredData").results = [{
-					value: Game.getColumnTraps(coordinates.y)
+					value: Game.getColumnTraps(coordinates.x)
 				}];
 			};
 			oMockServer.attachAfter("GET", fnColumnTraps, "ColumnsTraps");
