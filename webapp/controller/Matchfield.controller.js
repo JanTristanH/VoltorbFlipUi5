@@ -72,7 +72,7 @@ sap.ui.define([
 				loadRow(sPathRowsPoints, starEmoji, i);
 				loadRow(sPathRowsTraps, fireEmoji, i);
 				loadColumn(sPathColumnPoints, starEmoji, i);
-				loadColumn(sPathColumnTraps, starEmoji, i);
+				loadColumn(sPathColumnTraps, fireEmoji, i);
 			}
 		},
 		_imageHandler: function (oEvent) {
