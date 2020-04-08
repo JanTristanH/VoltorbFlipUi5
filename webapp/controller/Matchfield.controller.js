@@ -23,27 +23,33 @@ sap.ui.define([
 		onInit: function () {
 			let oLayout = this.getView().byId("BlockLayout");
 			var oModel = new JSONModel();
-			this.getView().setModel(oModel, "points");
+			this.getView().setModel(oModel, "localJSONModel");
 
 			this._populateField(this, oLayout);
 			this._loadTrapAndPointCount(this);
-			//todo preload missing Images on the way out
+			// preload missing Images on the way out
+			setTimeout(() => {
+
+				for (let i = 0; i < 4; i++) {
+					this._loadPicture(this, i).then(d => Log.info("preload"));
+				}
+			}, 0);
 		},
 		_populateTextCard: (x, y, oVBox) => {
 			let infix = x > y ? "Rows" : "Columns";
-			//todo bookmark
+
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "startext").bindText({
 				//use lower number
-				path: "points>/" + infix + "Points" + (y < x ? y : x)
+				path: "localJSONModel>/" + infix + "Points" + (y < x ? y : x)
 			}));
 
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "firetext").bindText({
-				path: "points>/" + infix + "Traps" + (y < x ? y : x)
+				path: "localJSONModel>/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
 		_loadTrapAndPointCount: (that) => {
 			let oModel = that.getOwnerComponent().getModel("odata");
-			let oPointsModel = that.getView().getModel("points");
+			let oPointsModel = that.getView().getModel("localJSONModel");
 			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
 					success: function (oData) {
@@ -195,7 +201,7 @@ sap.ui.define([
 					}
 					//add counter card to the end of the row
 					let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%").setAlignItems("Start");
-					//todo these numbers could be bound
+
 					that._populateTextCard(6, j, oVBox);
 
 					oHBox.addItem(oVBox);
@@ -238,9 +244,9 @@ sap.ui.define([
 		 * This hook is the same one that SAPUI5 controls get after being rendered.
 		 * @memberOf ZTHE.ZTHE_VOLTORB_FLIP.view.matchfield
 		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
+		/*		onAfterRendering: function () {
+
+				}*/
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
