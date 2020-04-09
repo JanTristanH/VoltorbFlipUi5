@@ -1,6 +1,5 @@
 let fireEmoji = "💥";
 let starEmoji = "⭐";
-let pictureCache = [];
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
@@ -23,6 +22,7 @@ sap.ui.define([
 		onInit: function () {
 			let oLayout = this.getView().byId("BlockLayout");
 			var oModel = new JSONModel();
+			oModel.setProperty("/pictureCache", []);
 			this.getView().setModel(oModel, "localJSONModel");
 
 			this._populateField(this, oLayout);
@@ -81,7 +81,7 @@ sap.ui.define([
 		},
 		_imageHandler: function (oEvent) {
 			//infoger
-			Log.debug ("Image (ID) clicked: " + oEvent.getSource().getId());
+			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
 			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
 			let that = oView.getController(); //for private Method
@@ -89,7 +89,7 @@ sap.ui.define([
 			let y = parseInt(this.getId().charAt(9), 10) + 1;
 			//nested Promise bad
 			that._loadValueAtPosition(oView, x, y).then(oData => {
-				//Log.info("value for this card" + oData.value);
+				//Log.debug("value for this card" + oData.value);
 				that._loadPicture(that, oData.value).then(oDataP => {
 					var oImageNew = new sap.m.Image({
 						id: "flipped" + oImage.getId(),
@@ -143,7 +143,9 @@ sap.ui.define([
 		},
 		_loadPicture: (that, id) => {
 			return new Promise((resolve, reject) => {
-				let a = pictureCache.filter(e => e.PictureID === id);
+				let oJSONModel = that.getView().getModel("localJSONModel");
+				let lCache = oJSONModel.getProperty("/pictureCache");
+				let a = lCache.filter(e => e.PictureID === id);
 				if (a.length > 0) {
 					resolve(a[0]);
 				} else {
@@ -155,8 +157,9 @@ sap.ui.define([
 					var sPath;
 					let mParam = {
 						success: function (oData) {
-							Log.info(JSON.stringify(oData));
-							pictureCache.push(oData.results[0]);
+							Log.debug(JSON.stringify(oData));
+							lCache.push(oData.results[0]);
+							oJSONModel.setProperty("/pictureCache", lCache);
 							resolve(oData.results[0]);
 						},
 						error: function (oError) {
