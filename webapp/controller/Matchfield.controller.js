@@ -20,11 +20,7 @@ sap.ui.define([
 		 */
 
 		onInit: function () {
-			let oLayout = this.getView().byId("BlockLayout");
-			var oModel = new JSONModel();
-			oModel.setProperty("/pictureCache", []);
-			this.getView().setModel(oModel, "localJSONModel");
-
+			let oLayout = this.getView().byId("BlockLayout");JS   
 			this._populateField(this, oLayout);
 			this._loadTrapAndPointCount(this);
 			// preload missing Images on the way out
@@ -146,7 +142,7 @@ sap.ui.define([
 				let sPath = "/Pictures";
 				// get model
 				var oModel = that.getOwnerComponent().getModel("odata");
-				let oJSONModel = that.getView().getModel("localJSONModel");
+
 				let lCache = oModel.getProperty(sPath + `(${id})`);
 				if (lCache) {
 					resolve(lCache);
@@ -158,7 +154,6 @@ sap.ui.define([
 						success: function (oData) {
 							Log.debug(JSON.stringify(oData));
 							lCache = oData.results[0];
-							oJSONModel.setProperty("/pictureCache/" + id, lCache);
 							resolve(oData.results[0]);
 						},
 						error: function (oError) {
