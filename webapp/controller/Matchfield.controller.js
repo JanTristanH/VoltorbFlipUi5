@@ -53,9 +53,7 @@ sap.ui.define([
 			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
 					success: function (oData) {
-						let obj = {};
-						obj[`${sPath.slice(1)}${index}`] = emoji + ": " + oData.results[0].value;
-						oPointsModel.setData(obj, true);
+						oPointsModel.setProperty(sPath + index, emoji + ": " + oData.results[0].value);
 					},
 					error: (oError) => {
 						Log.error(JSON.stringify(oError));
