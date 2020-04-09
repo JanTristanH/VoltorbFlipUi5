@@ -81,7 +81,7 @@ sap.ui.define([
 		},
 		_imageHandler: function (oEvent) {
 			//infoger
-			Log.info("Image (ID) clicked: " + oEvent.getSource().getId());
+			Log.debug ("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
 			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
 			let that = oView.getController(); //for private Method
