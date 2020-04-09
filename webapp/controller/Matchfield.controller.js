@@ -143,23 +143,22 @@ sap.ui.define([
 		},
 		_loadPicture: (that, id) => {
 			return new Promise((resolve, reject) => {
+				let sPath = "/Pictures";
+				// get model
+				var oModel = that.getOwnerComponent().getModel("odata");
 				let oJSONModel = that.getView().getModel("localJSONModel");
-				let lCache = oJSONModel.getProperty("/pictureCache");
-				let a = lCache.filter(e => e.PictureID === id);
-				if (a.length > 0) {
-					resolve(a[0]);
+				let lCache = oModel.getProperty(sPath + `(${id})`);
+				if (lCache) {
+					resolve(lCache);
 				} else {
 
-					// get model
-					var oModel = that.getOwnerComponent().getModel("odata");
+					// set path
 
-					// set path with primary keys in a String
-					var sPath;
 					let mParam = {
 						success: function (oData) {
 							Log.debug(JSON.stringify(oData));
-							lCache.push(oData.results[0]);
-							oJSONModel.setProperty("/pictureCache", lCache);
+							lCache = oData.results[0];
+							oJSONModel.setProperty("/pictureCache/" + id, lCache);
 							resolve(oData.results[0]);
 						},
 						error: function (oError) {
@@ -172,8 +171,6 @@ sap.ui.define([
 						filters: [new Filter("PictureID", FilterOperator.EQ, id)]
 
 					};
-
-					sPath = "/Pictures";
 
 					oModel.read(sPath, mParam);
 
