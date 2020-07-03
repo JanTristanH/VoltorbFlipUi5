@@ -1,9 +1,7 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form"
 	controllerName="ZTHE.ZTHE_VOLTORB_FLIP.controller.Matchfield" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Panel headerText="Nested View" class="sapUiResponsiveMargin" width="auto">
+	<Panel headerText="{i18n>matchfieldTitle}" class="sapUiResponsiveMargin" width="auto">
 		<content id="content">
-			<Button text="{i18n>showHelloButtonText}" press=".onShowHello" class="myAppDemoWT myCustomButton"/>
-			<Input value="{/recipient/name}" valueLiveUpdate="true" width="60%"/>
 			<HBox justifyContent="Center">
 				<VBox id="BlockLayout" width="800px"></VBox>
 			</HBox>
