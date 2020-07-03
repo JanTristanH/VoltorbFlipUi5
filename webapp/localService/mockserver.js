@@ -11,13 +11,10 @@ sap.ui.define([
 			Game.newGame(1);
 			// create
 			var oMockServer = new MockServer({
-				// eslint-disable-next-line
-				//rootUri: "https://services.odata.org/V2/Northwind/Northwind.svc/"
 				rootUri: "/destinations/northwind/V2/Northwind/Northwind.svc/"
 			});
 
 			var oUriParameters = new UriParameters(window.location.href);
-
 			// configure mock server with a delay
 			MockServer.config({
 				autoRespond: true,

@@ -1,6 +1,6 @@
 let obj = {};
 obj._matchField = [];
-//represenst how oftenthe index is represented as value (5 times a level)
+//represenst how often the index is represented as value (5 times a level)
 const disribution = [
 	[6, 15, 3, 1],
 	[6, 16, 0, 3],
@@ -30,7 +30,7 @@ let placeAtRandom = (e) => {
 		}
 		i++;
 	}
-	//console.log(i < 25 ? `placed ${e} at x${x}y${y}` : "ran out")
+
 };
 obj.newGame = (level) => {
 	level = level ? level : 1;
