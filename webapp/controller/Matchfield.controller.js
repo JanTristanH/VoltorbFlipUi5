@@ -53,6 +53,7 @@ sap.ui.define([
 				let mParam = {
 					success: function (oData) {
 						oPointsModel.setProperty(sPath + index, emoji + ": " + oData.results[0].value);
+						debugger;
 					},
 					error: (oError) => {
 						Log.error(JSON.stringify(oError));
@@ -145,7 +146,7 @@ sap.ui.define([
 				let sPath = "/Pictures";
 				// get model
 				var oModel = that.getOwnerComponent().getModel("odata");
-				
+
 				let lCache = oModel.getProperty(sPath + `(${id})`);
 				if (lCache) {
 					resolve(lCache);
@@ -156,7 +157,6 @@ sap.ui.define([
 					let mParam = {
 						success: function (oData) {
 							Log.debug(JSON.stringify(oData));
-							lCache = oData.results[0];
 							resolve(oData.results[0]);
 						},
 						error: function (oError) {
