@@ -29,7 +29,7 @@ sap.ui.define([
 		},
 		_populateTextCard: (x, y, oVBox) => {
 			//check whether the box is located on the side or bottom
-			//ad this for counts the score of a Row or a column
+			//and this for counts the score of a row or a column
 			let infix = x > y ? "Rows" : "Columns";
 
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "startext").bindText({
@@ -78,7 +78,7 @@ sap.ui.define([
 			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
 			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
-			let that = oView.getController(); //for private Method
+			let that = oView.getController(); //for private Method access
 			let x = parseInt(this.getId().charAt(11), 10) + 1;
 			let y = parseInt(this.getId().charAt(9), 10) + 1;
 			//nested Promise is not good but await gives syntax errors
