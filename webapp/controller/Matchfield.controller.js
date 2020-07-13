@@ -41,9 +41,10 @@ sap.ui.define([
 				path: "localJSONModel>/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
-		_loadTrapAndPointCount: function (that) {
-			let oModel = that.getOwnerComponent().getModel("odata");
-			let oPointsModel = that.getView().getModel("localJSONModel");
+		_loadTrapAndPointCount: function (thats) {
+
+			let oModel = this.getOwnerComponent().getModel("odata");
+			let oPointsModel = this.getView().getModel("localJSONModel");
 			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
 					success: function (oData) {
@@ -78,13 +79,13 @@ sap.ui.define([
 			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
 			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
-			let that = oView.getController(); //for private Method access
+			
 			let x = parseInt(this.getId().charAt(11), 10) + 1;
 			let y = parseInt(this.getId().charAt(9), 10) + 1;
 			//nested Promise is not good but await gives syntax errors
-			that._loadValueAtPosition(oView, x, y).then(oData => {
+			this._loadValueAtPosition(oView, x, y).then(oData => {
 				//Log.debug("value for this card" + oData.value);
-				that._loadPicture(that, oData.value).then(oDataP => {
+				this._loadPicture(this, oData.value).then(oDataP => {
 					var oImageNew = new sap.m.Image({
 						id: "flipped" + oImage.getId(),
 						src: "data:image/png;base64," + oDataP.Picture,
@@ -92,7 +93,7 @@ sap.ui.define([
 						height: "87px",
 						width: "87px"
 					});
-					that._flipFromToImage(oImage, oImageNew);
+					this._flipFromToImage(oImage, oImageNew);
 
 				});
 			});
@@ -106,7 +107,7 @@ sap.ui.define([
 		_loadValueAtPosition: function (that, x, y) {
 			return new Promise((resolve, reject) => {
 				// get model
-				var oModel = that.getModel("odata");
+				var oModel = this.getModel("odata");
 
 				// set path with primary keys in a String
 				var sPath;
@@ -129,11 +130,11 @@ sap.ui.define([
 			});
 
 		},
-		_loadPicture: function  (that, id) {
+		_loadPicture: function (that, id) {
 			return new Promise((resolve, reject) => {
 				let sPath = "/Pictures";
 
-				var oModel = that.getOwnerComponent().getModel("odata");
+				var oModel = this.getOwnerComponent().getModel("odata");
 
 				let lCache = oModel.getProperty(sPath + `(${id})`);
 				if (lCache) {
@@ -161,9 +162,9 @@ sap.ui.define([
 			});
 		},
 
-		_populateField: function (that, oLayout)  {
+		_populateField: function (that, oLayout) {
 
-			that._loadPicture(that, 99).then((oData) => {
+			this._loadPicture(this, 99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
 				for (let j = 0; j < 5; j++) {
 					let oHBox = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
@@ -175,7 +176,7 @@ sap.ui.define([
 							mode: "Background",
 							height: "87px",
 							width: "87px",
-							press: that._imageHandler
+							press: this._imageHandler
 						});
 						oVBox.addItem(oImage);
 						oHBox.addItem(oVBox);
@@ -183,7 +184,7 @@ sap.ui.define([
 					//add counter card to the end of the row
 					let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%").setAlignItems("Start");
 
-					that._populateTextCard(6, j, oVBox);
+					this ._populateTextCard(6, j, oVBox);
 
 					oHBox.addItem(oVBox);
 					oLayout.addItem(oHBox);
@@ -193,7 +194,7 @@ sap.ui.define([
 				for (let i = 0; i < 5; i++) {
 					let oVBox = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
 					//oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
-					that._populateTextCard(i, 6, oVBox);
+					this._populateTextCard(i, 6, oVBox);
 					oHBox.addItem(oVBox);
 				}
 				let oVBox = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
@@ -201,6 +202,6 @@ sap.ui.define([
 				oLayout.addItem(oHBox);
 			});
 		}
-		
+
 	});
 });
