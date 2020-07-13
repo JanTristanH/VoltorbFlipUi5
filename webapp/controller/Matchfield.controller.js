@@ -41,7 +41,7 @@ sap.ui.define([
 				path: "localJSONModel>/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
-		_loadTrapAndPointCount: (that) => {
+		_loadTrapAndPointCount: function (that) {
 			let oModel = that.getOwnerComponent().getModel("odata");
 			let oPointsModel = that.getView().getModel("localJSONModel");
 			let _loader = (sPath, emoji, index, filterOn) => {
@@ -98,12 +98,12 @@ sap.ui.define([
 			});
 
 		},
-		_flipFromToImage: (oImageFrom, oImageTo) => {
+		_flipFromToImage: function (oImageFrom, oImageTo) {
 			//todo add flipping animation
 			oImageFrom.getParent().addItem(oImageTo);
 			oImageFrom.destroy();
 		},
-		_loadValueAtPosition: (that, x, y) => {
+		_loadValueAtPosition: function (that, x, y) {
 			return new Promise((resolve, reject) => {
 				// get model
 				var oModel = that.getModel("odata");
@@ -129,7 +129,7 @@ sap.ui.define([
 			});
 
 		},
-		_loadPicture: (that, id) => {
+		_loadPicture: function  (that, id) {
 			return new Promise((resolve, reject) => {
 				let sPath = "/Pictures";
 
@@ -161,7 +161,7 @@ sap.ui.define([
 			});
 		},
 
-		_populateField: (that, oLayout) => {
+		_populateField: function (that, oLayout)  {
 
 			that._loadPicture(that, 99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
