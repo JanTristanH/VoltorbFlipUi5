@@ -27,7 +27,7 @@ sap.ui.define([
 				}
 			}, 0);
 		},
-		_populateTextCard: (x, y, oVBox) => {
+		_populateTextCard: function (x, y, oVBox) {
 			//check whether the box is located on the side or bottom
 			//and this for counts the score of a row or a column
 			let infix = x > y ? "Rows" : "Columns";
