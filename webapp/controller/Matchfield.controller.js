@@ -140,9 +140,6 @@ sap.ui.define([
 				if (lCache) {
 					resolve(lCache);
 				} else {
-
-					// set path
-
 					let mParam = {
 						success: function (oData) {
 							Log.debug(JSON.stringify(oData));
@@ -153,11 +150,8 @@ sap.ui.define([
 							reject(oError);
 						},
 						filters: [new Filter("PictureID", FilterOperator.EQ, id)]
-
 					};
-
 					oModel.read(sPath, mParam);
-
 				}
 			});
 		},
