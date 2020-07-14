@@ -1,5 +1,3 @@
-let fireEmoji = "💥";
-let starEmoji = "⭐";
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
@@ -12,6 +10,8 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("ZTHE.ZTHE_VOLTORB_FLIP.controller.matchfield", {
+		fireEmoji: "💥",
+		starEmoji: "⭐",
 
 		onInit: function () {
 			let oLayout = this.getView().byId("BlockLayout");
@@ -68,10 +68,10 @@ sap.ui.define([
 			const sPathColumnsPoints = "/ColumnsPoints";
 			const sPathColumnsTraps = "/ColumnsTraps";
 			for (let i = 0; i < 5; i++) {
-				loadRow(sPathRowsPoints, starEmoji, i);
-				loadRow(sPathRowsTraps, fireEmoji, i);
-				loadColumn(sPathColumnsPoints, starEmoji, i);
-				loadColumn(sPathColumnsTraps, fireEmoji, i);
+				loadRow(sPathRowsPoints, this.starEmoji, i);
+				loadRow(sPathRowsTraps, this.fireEmoji, i);
+				loadColumn(sPathColumnsPoints, this.starEmoji, i);
+				loadColumn(sPathColumnsTraps, this.fireEmoji, i);
 			}
 		},
 		_imageHandler: function (oEvent) {
