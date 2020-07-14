@@ -37,7 +37,7 @@ obj.newGame = (level) => {
 	for (let i = 0; i < 5; i++) {
 		obj._matchField[i] = [1, 1, 1, 1, 1];
 	}
-	//0 bases index
+	//0 based index
 	level -= 1;
 	//5 versions per level
 	level *= 5;
