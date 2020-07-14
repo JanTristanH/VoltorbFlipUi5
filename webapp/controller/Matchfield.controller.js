@@ -79,13 +79,13 @@ sap.ui.define([
 			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
 			let oImage = this;
 			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
-			
+			let that = oView.getController(); //for private Method access
 			let x = parseInt(this.getId().charAt(11), 10) + 1;
 			let y = parseInt(this.getId().charAt(9), 10) + 1;
 			//nested Promise is not good but await gives syntax errors
-			this._loadValueAtPosition(oView, x, y).then(oData => {
+			that._loadValueAtPosition(oView, x, y).then(oData => {
 				//Log.debug("value for this card" + oData.value);
-				this._loadPicture(this, oData.value).then(oDataP => {
+				that._loadPicture(this, oData.value).then(oDataP => {
 					var oImageNew = new sap.m.Image({
 						id: "flipped" + oImage.getId(),
 						src: "data:image/png;base64," + oDataP.Picture,
@@ -93,7 +93,7 @@ sap.ui.define([
 						height: "87px",
 						width: "87px"
 					});
-					this._flipFromToImage(oImage, oImageNew);
+					that._flipFromToImage(oImage, oImageNew);
 
 				});
 			});
@@ -107,7 +107,7 @@ sap.ui.define([
 		_loadValueAtPosition: function (that, x, y) {
 			return new Promise((resolve, reject) => {
 				// get model
-				var oModel = this.getModel("odata");
+				var oModel = this.getView().getModel("odata");
 
 				// set path with primary keys in a String
 				var sPath;
@@ -184,7 +184,7 @@ sap.ui.define([
 					//add counter card to the end of the row
 					let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%").setAlignItems("Start");
 
-					this ._populateTextCard(6, j, oVBox);
+					this._populateTextCard(6, j, oVBox);
 
 					oHBox.addItem(oVBox);
 					oLayout.addItem(oHBox);
