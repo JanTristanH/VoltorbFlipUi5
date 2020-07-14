@@ -23,7 +23,7 @@ sap.ui.define([
 			// preload missing Images on the way out
 			setTimeout(() => {
 				for (let i = 0; i < 4; i++) {
-					this._loadPicture(this, i).then(d => Log.info("preload"));
+					this._loadPicture(i).then(d => Log.info("preload"));
 				}
 			}, 0);
 		},
@@ -85,7 +85,7 @@ sap.ui.define([
 			//nested Promise is not good but await gives syntax errors
 			that._loadValueAtPosition(oView, x, y).then(oData => {
 				//Log.debug("value for this card" + oData.value);
-				that._loadPicture(this, oData.value).then(oDataP => {
+				that._loadPicture(oData.value).then(oDataP => {
 					var oImageNew = new sap.m.Image({
 						id: "flipped" + oImage.getId(),
 						src: "data:image/png;base64," + oDataP.Picture,
@@ -130,7 +130,7 @@ sap.ui.define([
 			});
 
 		},
-		_loadPicture: function (that, id) {
+		_loadPicture: function (id) {
 			return new Promise((resolve, reject) => {
 				let sPath = "/Pictures";
 
@@ -164,7 +164,7 @@ sap.ui.define([
 
 		_populateField: function (oLayout) {
 
-			this._loadPicture(this, 99).then((oData) => {
+			this._loadPicture(99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
 				for (let j = 0; j < 5; j++) {
 					let oHBox = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
