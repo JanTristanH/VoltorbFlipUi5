@@ -19,7 +19,7 @@ sap.ui.define([
 			this.getView().setModel(oModel, "localJSONModel");
 
 			this._populateField(oLayout);
-			this._loadTrapAndPointCount(this);
+			this._loadTrapAndPointCount();
 			// preload missing Images on the way out
 			setTimeout(() => {
 				for (let i = 0; i < 4; i++) {
@@ -41,7 +41,7 @@ sap.ui.define([
 				path: "localJSONModel>/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
-		_loadTrapAndPointCount: function (thats) {
+		_loadTrapAndPointCount: function () {
 
 			let oModel = this.getOwnerComponent().getModel("odata");
 			let oPointsModel = this.getView().getModel("localJSONModel");
