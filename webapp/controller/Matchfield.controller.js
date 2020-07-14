@@ -83,7 +83,7 @@ sap.ui.define([
 			let x = parseInt(this.getId().charAt(11), 10) + 1;
 			let y = parseInt(this.getId().charAt(9), 10) + 1;
 			//nested Promise is not good but await gives syntax errors
-			that._loadValueAtPosition(oView, x, y).then(oData => {
+			that._loadValueAtPosition(x, y).then(oData => {
 				//Log.debug("value for this card" + oData.value);
 				that._loadPicture(oData.value).then(oDataP => {
 					var oImageNew = new sap.m.Image({
@@ -104,7 +104,7 @@ sap.ui.define([
 			oImageFrom.getParent().addItem(oImageTo);
 			oImageFrom.destroy();
 		},
-		_loadValueAtPosition: function (that, x, y) {
+		_loadValueAtPosition: function (x, y) {
 			return new Promise((resolve, reject) => {
 				// get model
 				var oModel = this.getView().getModel("odata");
