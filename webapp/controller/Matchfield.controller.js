@@ -18,7 +18,7 @@ sap.ui.define([
 			var oModel = new JSONModel();
 			this.getView().setModel(oModel, "localJSONModel");
 
-			this._populateField(this, oLayout);
+			this._populateField(oLayout);
 			this._loadTrapAndPointCount(this);
 			// preload missing Images on the way out
 			setTimeout(() => {
@@ -162,7 +162,7 @@ sap.ui.define([
 			});
 		},
 
-		_populateField: function (that, oLayout) {
+		_populateField: function (oLayout) {
 
 			this._loadPicture(this, 99).then((oData) => {
 				//build 5 rows with 5 "Gamecards" and one info Card
