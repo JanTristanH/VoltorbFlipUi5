@@ -43,7 +43,7 @@ sap.ui.define([
 		},
 		_loadTrapAndPointCount: function () {
 
-			let oModel = this.getOwnerComponent().getModel("odata");
+			let oModel = this.getOwnerComponent().getModel("odata"); //why cant i use this.getView().getModel()?
 			let oPointsModel = this.getView().getModel("localJSONModel");
 			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
