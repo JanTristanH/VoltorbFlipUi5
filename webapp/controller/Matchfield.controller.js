@@ -11,6 +11,10 @@ sap.ui.define([
 
 	const localModelName = "localJSONModel";
 	const backImageId = 99;
+	const sPathRowsPoints = "/RowsPoints";
+	const sPathRowsTraps = "/RowsTraps";
+	const sPathColumnsPoints = "/ColumnsPoints";
+	const sPathColumnsTraps = "/ColumnsTraps";
 
 	//make backend give you row and column count
 	//backend idea could be improved upon
@@ -50,37 +54,34 @@ sap.ui.define([
 			}));
 		},
 
+		_loadAndSetText: function (sPath, emoji, index, filterOn) {
+			let oModel = this.getView().getModel("odata");
+			let oPointsModel = this.getView().getModel(localModelName);
+			let mParam = {
+				success: function (oData) {
+					oPointsModel.setProperty(sPath + index, emoji + ": " + oData.results[0].value);
+				},
+				error: (oError) => {
+					Log.error(JSON.stringify(oError));
+				},
+				filters: [new Filter(filterOn, FilterOperator.EQ, index + 1)]
+			};
+			oModel.read(sPath, mParam);
+		},
+		_loadRow: function (sPath, emoji, index) {
+			this._loadAndSetText(sPath, emoji, index, "y");
+		},
+		_loadColumn: function (sPath, emoji, index) {
+			this._loadAndSetText(sPath, emoji, index, "x");
+		},
 		//should be one request
 		_loadTrapAndPointCount: function () {
-			let oModel = this.getView().getModel("odata"); 
-			let oPointsModel = this.getView().getModel(localModelName);
-			let _loader = (sPath, emoji, index, filterOn) => {
-				let mParam = {
-					success: function (oData) {
-						oPointsModel.setProperty(sPath + index, emoji + ": " + oData.results[0].value);
-					},
-					error: (oError) => {
-						Log.error(JSON.stringify(oError));
-					},
-					filters: [new Filter(filterOn, FilterOperator.EQ, index + 1)]
-				};
-				oModel.read(sPath, mParam);
-			};
-			let loadRow = (sPath, emoji, index) => {
-				_loader(sPath, emoji, index, "y");
-			};
-			let loadColumn = (sPath, emoji, index) => {
-				_loader(sPath, emoji, index, "x");
-			};
-			const sPathRowsPoints = "/RowsPoints";
-			const sPathRowsTraps = "/RowsTraps";
-			const sPathColumnsPoints = "/ColumnsPoints";
-			const sPathColumnsTraps = "/ColumnsTraps";
+
 			for (let i = 0; i < 5; i++) {
-				loadRow(sPathRowsPoints, this.starEmoji, i);
-				loadRow(sPathRowsTraps, this.fireEmoji, i);
-				loadColumn(sPathColumnsPoints, this.starEmoji, i);
-				loadColumn(sPathColumnsTraps, this.fireEmoji, i);
+				this._loadRow(sPathRowsPoints, this.starEmoji, i);
+				this._loadRow(sPathRowsTraps, this.fireEmoji, i);
+				this._loadColumn(sPathColumnsPoints, this.starEmoji, i);
+				this._loadColumn(sPathColumnsTraps, this.fireEmoji, i);
 			}
 		},
 
