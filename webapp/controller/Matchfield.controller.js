@@ -9,24 +9,32 @@ sap.ui.define([
 ], function (Controller, MessageToast, Log, Filter, FilterOperator, JSONModel) {
 	"use strict";
 
+	const localModelName = "localJSONModel";
+	const backImageId = 99;
+
+	//make backend give you row and column count
+	//backend idea could be improved upon
 	return Controller.extend("ZTHE.ZTHE_VOLTORB_FLIP.controller.matchfield", {
 		fireEmoji: "💥",
 		starEmoji: "⭐",
 
 		onInit: function () {
-			let oLayout = this.getView().byId("BlockLayout");
-			var oModel = new JSONModel();
-			this.getView().setModel(oModel, "localJSONModel");
+			let oModel = new JSONModel();
+			this.getView().setModel(oModel, localModelName);
 
-			this._populateField(oLayout);
-			this._loadTrapAndPointCount();
+			this._populateField();
 			// preload missing Images on the way out
 			setTimeout(() => {
 				for (let i = 0; i < 4; i++) {
-					this._loadPicture(i).then(d => Log.info("preload"));
+					this._promisePicture(i).then(d => Log.info("preload"));
 				}
 			}, 0);
 		},
+
+		onAfterRendering: function () {
+			this._loadTrapAndPointCount();
+		},
+
 		_populateTextCard: function (x, y, oVBox) {
 			//check whether the box is located on the side or bottom
 			//and this for counts the score of a row or a column
@@ -34,17 +42,18 @@ sap.ui.define([
 
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "startext").bindText({
 				//use lower number
-				path: "localJSONModel>/" + infix + "Points" + (y < x ? y : x)
+				path: localModelName + ">/" + infix + "Points" + (y < x ? y : x)
 			}));
 
 			oVBox.addItem(new sap.m.Text("x" + x + "y" + y + "firetext").bindText({
-				path: "localJSONModel>/" + infix + "Traps" + (y < x ? y : x)
+				path: localModelName + ">/" + infix + "Traps" + (y < x ? y : x)
 			}));
 		},
-		_loadTrapAndPointCount: function () {
 
-			let oModel = this.getOwnerComponent().getModel("odata"); //why cant i use this.getView().getModel()?
-			let oPointsModel = this.getView().getModel("localJSONModel");
+		//should be one request
+		_loadTrapAndPointCount: function () {
+			let oModel = this.getView().getModel("odata"); 
+			let oPointsModel = this.getView().getModel(localModelName);
 			let _loader = (sPath, emoji, index, filterOn) => {
 				let mParam = {
 					success: function (oData) {
@@ -74,37 +83,8 @@ sap.ui.define([
 				loadColumn(sPathColumnsTraps, this.fireEmoji, i);
 			}
 		},
-		_imageHandler: function (oEvent) {
-			//infoger
-			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
-			let oImage = this;
-			var oView = this.getParent().getParent().getParent().getParent().getParent().getParent();
-			let that = oView.getController(); //for private Method access
-			let x = parseInt(this.getId().charAt(11), 10) + 1;
-			let y = parseInt(this.getId().charAt(9), 10) + 1;
-			//nested Promise is not good but await gives syntax errors
-			that._loadValueAtPosition(x, y).then(oData => {
-				//Log.debug("value for this card" + oData.value);
-				that._loadPicture(oData.value).then(oDataP => {
-					var oImageNew = new sap.m.Image({
-						id: "flipped" + oImage.getId(),
-						src: "data:image/png;base64," + oDataP.Picture,
-						mode: "Background",
-						height: "87px",
-						width: "87px"
-					});
-					that._flipFromToImage(oImage, oImageNew);
 
-				});
-			});
-
-		},
-		_flipFromToImage: function (oImageFrom, oImageTo) {
-			//todo add flipping animation
-			oImageFrom.getParent().addItem(oImageTo);
-			oImageFrom.destroy();
-		},
-		_loadValueAtPosition: function (x, y) {
+		_promiseValueAtPosition: function (x, y) {
 			return new Promise((resolve, reject) => {
 				// get model
 				var oModel = this.getView().getModel("odata");
@@ -130,13 +110,13 @@ sap.ui.define([
 			});
 
 		},
-		_loadPicture: function (id) {
+
+		_promisePicture: function (id) {
 			return new Promise((resolve, reject) => {
 				let sPath = "/Pictures";
-
-				var oModel = this.getOwnerComponent().getModel("odata");
-
+				let oModel = this.getOwnerComponent().getModel("odata");
 				let lCache = oModel.getProperty(sPath + `(${id})`);
+
 				if (lCache) {
 					resolve(lCache);
 				} else {
@@ -156,46 +136,77 @@ sap.ui.define([
 			});
 		},
 
-		_populateField: function (oLayout) {
+		_onImagePress: function (x, y, something, oEvent) {
+			//infoger
+			Log.debug("Image (ID) clicked: " + oEvent.getSource().getId());
+			let oImage = oEvent.getSource();
 
-			this._loadPicture(99).then((oData) => {
-				//build 5 rows with 5 "Gamecards" and one info Card
-				for (let j = 0; j < 5; j++) {
-					let oHBox = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
-					for (let i = 0; i < 5; i++) {
-						let oVBox = new sap.m.VBox("y" + j + "x" + i).setWidth("100%").setAlignItems("Center");
-						var oImage = new sap.m.Image({
-							id: "imageAt_y" + j + "X" + i,
-							src: "data:image/png;base64," + oData.Picture,
-							mode: "Background",
-							height: "87px",
-							width: "87px",
-							press: this._imageHandler
-						});
-						oVBox.addItem(oImage);
-						oHBox.addItem(oVBox);
-					}
-					//add counter card to the end of the row
-					let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%").setAlignItems("Start");
+			//nested Promise is not good but await gives syntax errors
+			this._promiseValueAtPosition(x + 1, y + 1).then(oData => {
+				//Log.debug("value for this card" + oData.value);
+				this._promisePicture(oData.value).then(oDataP => {
+					//try changing src of existing image
+					oImage.setSrc("data:image/png;base64," + oDataP.Picture);
+				});
+			});
 
-					this._populateTextCard(6, j, oVBox);
+		},
 
-					oHBox.addItem(oVBox);
-					oLayout.addItem(oHBox);
-				}
-				//build bottom row and add empty Box for spacing
-				let oHBox = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
+		_populateField: function () {
+			let oLayout = this.getView().byId("BlockLayout");
+
+			this._promisePicture(backImageId).then((oData) => {
+				this._buildPlayableRows(oLayout, oData);
+
+				let oInfoRow = this._buildInfoRow();
+				let oSpacingRow = this._buildSpacingRow(oInfoRow);
+
+				oInfoRow.addItem(oSpacingRow);
+				oLayout.addItem(oInfoRow);
+			});
+		},
+
+		_buildPlayableRows: function (oLayout, oData) {
+			for (let j = 0; j < 5; j++) {
+				let oHBox = new sap.m.HBox("y" + j).setWidth("100%").setAlignItems("Center");
 				for (let i = 0; i < 5; i++) {
-					let oVBox = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
-					//oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
-					this._populateTextCard(i, 6, oVBox);
+					let oVBox = new sap.m.VBox("y" + j + "x" + i).setWidth("100%").setAlignItems("Center");
+					var oImage = new sap.m.Image({
+						id: "imageAt_y" + j + "X" + i,
+						src: "data:image/png;base64," + oData.Picture,
+						mode: "Background",
+						height: "87px",
+						width: "87px",
+						press: this._onImagePress.bind(this, i, j, "foo")
+					});
+
+					oVBox.addItem(oImage);
 					oHBox.addItem(oVBox);
 				}
-				let oVBox = new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
+				//add counter card to the end of the row
+				let oVBox = new sap.m.VBox("y" + j + "x" + 6).setWidth("100%").setAlignItems("Start");
+
+				this._populateTextCard(6, j, oVBox);
+
 				oHBox.addItem(oVBox);
 				oLayout.addItem(oHBox);
-			});
-		}
+			}
+		},
 
+		_buildInfoRow: function () {
+			let oHBox = new sap.m.HBox("y" + 6).setWidth("100%").setAlignItems("Center");
+			for (let i = 0; i < 5; i++) {
+				let oVBox = new sap.m.VBox("y" + 6 + "x" + i).setWidth("100%").setAlignItems("Center");
+				//oVBox.addItem(new sap.m.Text().setText(starEmoji + ":" + "\n" + fireEmoji + ":"));
+				this._populateTextCard(i, 6, oVBox);
+				oHBox.addItem(oVBox);
+			}
+
+			return oHBox;
+		},
+
+		_buildSpacingRow: function () {
+			return new sap.m.VBox("y" + 6 + "x" + 6).setWidth("100%");
+		}
 	});
 });
